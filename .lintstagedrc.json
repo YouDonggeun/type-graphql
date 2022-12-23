@@ -1,0 +1,12 @@
+{
+    "{src,tests,examples}/**/*.ts": [
+        "npx eslint --fix",
+        "npx prettier --write"
+    ],
+    "{src,tests,examples}/**/*.js": [
+        "npx prettier --write"
+    ],
+    "docs/**/*.md": [
+        "npx prettier --write"
+    ]
+}

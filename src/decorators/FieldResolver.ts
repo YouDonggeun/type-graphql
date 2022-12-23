@@ -39,7 +39,7 @@ export function FieldResolver(
       typeOptions = typeInfo.typeOptions;
       getType = typeInfo.getType;
     } catch {
-      // tslint:disable-next-line:no-empty
+      // eslint:disable-next-line:no-empty
     }
 
     getMetadataStorage().collectFieldResolverMetadata({

@@ -1,4 +1,4 @@
-// tslint:disable:member-ordering
+// eslint:disable:member-ordering
 import "reflect-metadata";
 import {
   GraphQLSchema,
@@ -22,7 +22,7 @@ import {
   InterfaceType,
 } from "../../src";
 import { getMetadataStorage } from "../../src/metadata/getMetadataStorage";
-import { SchemaDirectiveVisitor } from "graphql-tools";
+import { SchemaDirectiveVisitor } from "@graphql-tools/utils";
 import { UpperCaseDirective } from "../helpers/directives/UpperCaseDirective";
 import { AppendDirective } from "../helpers/directives/AppendDirective";
 import { assertValidDirective } from "../helpers/directives/assertValidDirective";
@@ -260,7 +260,7 @@ describe("Directives", () => {
         validate: false,
       });
 
-      SchemaDirectiveVisitor.visitSchemaDirectives(schema, {
+      mapSchema(schema, {
         upper: UpperCaseDirective,
         append: AppendDirective,
       });
@@ -289,7 +289,10 @@ describe("Directives", () => {
           queryWithUpper
         }`;
 
-        const { data } = await graphql(schema, query);
+        const { data } = await graphql({
+          schema,
+          source: query,
+        });
 
         expect(data).toHaveProperty("queryWithUpper", "QUERYWITHUPPER");
       });
@@ -299,7 +302,10 @@ describe("Directives", () => {
           queryWithUpperDefinition
         }`;
 
-        const { data } = await graphql(schema, query);
+        const { data } = await graphql({
+          schema,
+          source: query,
+        });
 
         expect(data).toHaveProperty("queryWithUpperDefinition", "QUERYWITHUPPER");
       });
@@ -309,7 +315,10 @@ describe("Directives", () => {
           queryWithAppend(append: ", world!")
         }`;
 
-        const { data } = await graphql(schema, query);
+        const { data } = await graphql({
+          schema,
+          source: query,
+        });
 
         expect(data).toHaveProperty("queryWithAppend", "hello, world!");
       });
@@ -319,7 +328,10 @@ describe("Directives", () => {
           queryWithAppendDefinition(append: ", world!")
         }`;
 
-        const { data } = await graphql(schema, query);
+        const { data } = await graphql({
+          schema,
+          source: query,
+        });
 
         expect(data).toHaveProperty("queryWithAppendDefinition", "hello, world!");
       });
@@ -329,7 +341,10 @@ describe("Directives", () => {
           queryWithUpperAndAppend(append: ", world!")
         }`;
 
-        const { data } = await graphql(schema, query);
+        const { data } = await graphql({
+          schema,
+          source: query,
+        });
 
         expect(data).toHaveProperty("queryWithUpperAndAppend", "HELLO, WORLD!");
       });
@@ -354,7 +369,10 @@ describe("Directives", () => {
           mutationWithUpper
         }`;
 
-        const { data } = await graphql(schema, mutation);
+        const { data } = await graphql({
+          schema,
+          source: mutation,
+        });
 
         expect(data).toHaveProperty("mutationWithUpper", "MUTATIONWITHUPPER");
       });
@@ -364,7 +382,10 @@ describe("Directives", () => {
           mutationWithUpperDefinition
         }`;
 
-        const { data } = await graphql(schema, mutation);
+        const { data } = await graphql({
+          schema,
+          source: mutation,
+        });
 
         expect(data).toHaveProperty("mutationWithUpperDefinition", "MUTATIONWITHUPPER");
       });
@@ -374,7 +395,10 @@ describe("Directives", () => {
           mutationWithAppend(append: ", world!")
         }`;
 
-        const { data } = await graphql(schema, mutation);
+        const { data } = await graphql({
+          schema,
+          source: mutation,
+        });
 
         expect(data).toHaveProperty("mutationWithAppend", "hello, world!");
       });
@@ -384,7 +408,10 @@ describe("Directives", () => {
           mutationWithAppendDefinition(append: ", world!")
         }`;
 
-        const { data } = await graphql(schema, mutation);
+        const { data } = await graphql({
+          schema,
+          source: mutation,
+        });
 
         expect(data).toHaveProperty("mutationWithAppendDefinition", "hello, world!");
       });
@@ -394,7 +421,10 @@ describe("Directives", () => {
           mutationWithUpperAndAppend(append: ", world!")
         }`;
 
-        const { data } = await graphql(schema, mutation);
+        const { data } = await graphql({
+          schema,
+          source: mutation,
+        });
 
         expect(data).toHaveProperty("mutationWithUpperAndAppend", "HELLO, WORLD!");
       });
@@ -402,8 +432,9 @@ describe("Directives", () => {
 
     describe("Subscription", () => {
       it("should add directives to subscription types", async () => {
-        const subscriptionWithDirective = schema.getSubscriptionType()!.getFields()
-          .subscriptionWithDirective;
+        const subscriptionWithDirective = schema
+          .getSubscriptionType()!
+          .getFields().subscriptionWithDirective;
 
         assertValidDirective(subscriptionWithDirective.astNode, "foo");
       });
@@ -418,9 +449,9 @@ describe("Directives", () => {
       });
 
       it("adds field directives to input type fields", async () => {
-        const fields = (schema.getType(
-          "DirectiveOnFieldInput",
-        ) as GraphQLInputObjectType).getFields();
+        const fields = (
+          schema.getType("DirectiveOnFieldInput") as GraphQLInputObjectType
+        ).getFields();
 
         expect(fields).toHaveProperty("append");
         expect(fields.append).toHaveProperty("astNode");
@@ -428,9 +459,9 @@ describe("Directives", () => {
       });
 
       it("adds inherited field directives to input type fields while extending input type class", async () => {
-        const fields = (schema.getType(
-          "SubDirectiveOnFieldInput",
-        ) as GraphQLInputObjectType).getFields();
+        const fields = (
+          schema.getType("SubDirectiveOnFieldInput") as GraphQLInputObjectType
+        ).getFields();
 
         expect(fields).toHaveProperty("append");
         expect(fields.append).toHaveProperty("astNode");
@@ -457,7 +488,10 @@ describe("Directives", () => {
           }
       }`;
 
-        const { data } = await graphql(schema, query);
+        const { data } = await graphql({
+          schema,
+          source: query,
+        });
 
         expect(data).toHaveProperty("objectType");
         expect(data!.objectType).toEqual({
@@ -494,7 +528,10 @@ describe("Directives", () => {
           }
       }`;
 
-        const { data } = await graphql(schema, query);
+        const { data } = await graphql({
+          schema,
+          source: query,
+        });
 
         expect(data).toHaveProperty("subObjectType");
         expect(data!.subObjectType).toEqual({

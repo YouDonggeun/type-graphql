@@ -1,0 +1,18 @@
+{
+
+  "parser": "@typescript-eslint/parser",
+  "extends": ["eslint-config-prettier"],
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "ban-types": "off",
+    "no-console": "off",
+    "no-namespace": "off",
+    "object-literal-sort-keys": "off",
+    "max-classes-per-file": "off",
+    "unified-signatures": "off",
+    "ordered-imports": "off",
+    "no-unused-expression": "off",
+    "callable-types": "off",
+    "@typescript-eslint/array-type":"error"
+  }
+}

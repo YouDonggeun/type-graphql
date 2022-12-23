@@ -131,7 +131,7 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
 
 - All features or bug fixes **must be covered by tests**.
 
-- The code must pass type checking and fullfil all the TSLint rules.
+- The code must pass type checking and fullfil all the ESLint rules.
 
 ## <a name="commit"></a> Commit Message Guidelines
 

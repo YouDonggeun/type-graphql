@@ -6,8 +6,10 @@ import {
   GraphQLInputField,
   GraphQLScalarType,
   GraphQLNonNull,
+  GraphQLSchema,
+  defaultFieldResolver,
 } from "graphql";
-import { SchemaDirectiveVisitor } from "graphql-tools";
+import { getDirective, MapperKind, mapSchema } from "@graphql-tools/utils";
 
 class UpperCaseType extends GraphQLScalarType {
   constructor(type: any) {
@@ -23,7 +25,30 @@ class UpperCaseType extends GraphQLScalarType {
     return typeof value === "string" ? value.toUpperCase() : value;
   }
 }
+export function upperCaseDirective(schema: GraphQLSchema, directiveName: string) {
+  return mapSchema(schema, {
+    [DirectiveLocation.FIELD_DEFINITION]: fieldConfig => {
+      const upperDirective = getDirective(schema, fieldConfig, directiveName)?.[0];
 
+      if (upperDirective) {
+        if (fieldConfig.type instanceof UpperCaseType) {
+          /* noop */
+        } else if (
+          fieldConfig.type instanceof GraphQLNonNull &&
+          fieldConfig.type.ofType instanceof GraphQLScalarType
+        ) {
+          fieldConfig.type = new GraphQLNonNull(new UpperCaseType(fieldConfig.type.ofType));
+        } else if (fieldConfig.type instanceof GraphQLScalarType) {
+          fieldConfig.type = new UpperCaseType(fieldConfig.type);
+        } else {
+          throw new Error(`Not a scalar type: ${fieldConfig.type}`);
+        }
+        return fieldConfig;
+      }
+      throw new Error(`Not a scalar type: ${fieldConfig.type}`);
+    },
+  });
+}
 export class UpperCaseDirective extends SchemaDirectiveVisitor {
   static getDirectiveDeclaration(directiveName: string): GraphQLDirective {
     return new GraphQLDirective({
